@@ -1,2 +1,2 @@
 #!/bin/bash
-setvar (($BEST School))
+echo $ BEST="Scool"
