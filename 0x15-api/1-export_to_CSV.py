@@ -1,31 +1,18 @@
 #!/usr/bin/python3
-"""
-export data in JSON format
-Records all tasks from all employees
-"""
+"""Exports to-do list information for a given employee ID to CSV format."""
+import csv
+import requests
+import sys
+
 if __name__ == "__main__":
-    import json
-    import requests
+    user_id = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url + "users/{}".format(user_id)).json()
+    username = user.get("username")
+    todos = requests.get(url + "todos", params={"userId": user_id}).json()
 
-    FILENAME = 'todo_all_employees.json'
-    URL_FOR_USERS = 'https://jsonplaceholder.typicode.com/users'
-    URL_FOR_TODOS = 'https://jsonplaceholder.typicode.com/todos'
-
-    r_for_users = requests.get(URL_FOR_USERS)
-    r_for_todos = requests.get(URL_FOR_TODOS)
-
-    users = r_for_users.json()
-    todos = r_for_todos.json()
-    todo_all_employees = {}
-
-    for user in users:
-        todos_list = []
-        for todo in todos:
-            if todo.get("userId") == user.get("id"):
-                my_dict = {"username": user.get("username"),
-                           "task": todo.get("title"),
-                           "completed": todo.get("completed")}
-                todos_list.append(my_dict)
-        todo_all_employees[user.get("id")] = todos_list
-    with open(FILENAME, 'w+') as f:
-        json.dump(todo_all_employees, f)
+    with open("{}.csv".format(user_id), "w", newline="") as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        [writer.writerow(
+            [user_id, username, t.get("completed"), t.get("title")]
+         ) for t in todos]
