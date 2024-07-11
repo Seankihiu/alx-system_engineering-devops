@@ -2,9 +2,9 @@
 """Querying the Reddit API"""
 import requests
 
+
 def number_of_subscribers(subreddit):
-    """A function that queries the Reddit API and returns the number of
-    subscribers (not active users, total subscribers) for a given subreddit"""
+    """Queries the Reddit API and returns the number of subscribers for a given subreddit"""
     if not subreddit or not isinstance(subreddit, str):
         return 0
 
@@ -20,9 +20,4 @@ def number_of_subscribers(subreddit):
             return 0
     except Exception:
         return 0
-
-# Example usage
-if __name__ == "__main__":
-    print(number_of_subscribers("python"))  # Should print the number of subscribers for the "python" subreddit
-    print(number_of_subscribers("nonexistent_subreddit"))  # Should print 0
 
